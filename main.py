@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, render_template
 from werkzeug import secure_filename
 
 UPLOAD_FOLDER = './files/'
@@ -29,15 +29,7 @@ def upload_file():
         for one_file in dirlist:
             print one_file
 
-    return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form action="" method=post enctype=multipart/form-data>
-      <p><input type=file name=file>
-         <input type=submit value=Upload>
-    </form>
-    '''
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
