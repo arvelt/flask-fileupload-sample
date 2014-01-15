@@ -1,8 +1,9 @@
+# -*- coding: utf-8 -*-
 import os
 from flask import Flask, request, redirect
 from werkzeug import secure_filename
 
-UPLOAD_FOLDER = './files'
+UPLOAD_FOLDER = './files/'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__)
@@ -17,11 +18,17 @@ def allowed_file(filename):
 def upload_file():
     if request.method == 'POST':
         file = request.files['file']
-        app.logger.debug(file)
+        app.logger.info("Uploaded filename is "+file.filename)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return redirect('/')
+
+    if request.method == 'GET':
+        dirlist = os.listdir( app.config['UPLOAD_FOLDER'] )
+        for one_file in dirlist:
+            print one_file
+
     return '''
     <!doctype html>
     <title>Upload new File</title>
