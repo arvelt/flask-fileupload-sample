@@ -1,1 +1,1 @@
-web: flaskfile-upload main:app
+web: flask-fileupload-sample main:app
