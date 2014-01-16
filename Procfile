@@ -1,1 +1,1 @@
-web: flask-fileupload-sample main:app
+web: gunicorn main:app
