@@ -5,3 +5,11 @@
   <p><input type=file name=file>
      <input type=submit value=Upload>
 </form>
+{% if files %}
+  <h2>Files llist</h2>
+  {% for file in files %}
+    <p><a href="{{ file.url }}"> {{ file.file_name }} </a></p>
+  {% endfor %}
+{% else %}
+  <h2>No files</h2>
+{% endif %}

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
-from flask import Flask, request, redirect, render_template
-from werkzeug import secure_filename
+from flask import Flask, request, redirect, render_template, send_from_directory
 
 UPLOAD_FOLDER = './files/'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
@@ -20,16 +19,26 @@ def upload_file():
         file = request.files['file']
         app.logger.info("Uploaded filename is "+file.filename)
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
             return redirect('/')
 
     if request.method == 'GET':
-        dirlist = os.listdir( app.config['UPLOAD_FOLDER'] )
-        for one_file in dirlist:
-            print one_file
+        file_list = os.listdir( app.config['UPLOAD_FOLDER'] )
+        files = []
+        for one_file in file_list:
+            dic_file = {}
+            link = '/files/'+one_file
+            dic_file['url'] = link
+            dic_file['file_name'] = one_file
+            print dic_file
+            files.append( dic_file )
 
-    return render_template('index.html')
+    return render_template('index.html',files=files)
+
+@app.route('/files/<path:filename>')
+def download_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'],
+                               filename, as_attachment=True)
 
 if __name__ == '__main__':
     app.run(debug=True)
