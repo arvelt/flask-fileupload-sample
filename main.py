@@ -26,6 +26,8 @@ def upload_file():
         file_list = os.listdir( app.config['UPLOAD_FOLDER'] )
         files = []
         for one_file in file_list:
+            if one_file == '.gitkeep':
+                continue
             dic_file = {}
             link = '/files/'+one_file
             dic_file['url'] = link

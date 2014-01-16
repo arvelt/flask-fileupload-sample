@@ -1,0 +1,1 @@
+web: flaskfile-upload main:app
