@@ -1,4 +1,3 @@
-
 For apache
 
 add /etc/httpd/conf/httpd.conf
@@ -21,7 +20,7 @@ WSGISocketPrefix /var/run/wsgi
     WSGIScriptReloading On
  
     <Directory /home/foo/flask>
-        WSGIProcessGroup example.com
+        WSGIProcessGroup yourapplication
         WSGIApplicationGroup %{GLOBAL}
         Order deny,allow
         Allow from all
