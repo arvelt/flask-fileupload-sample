@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 import os
-from flask import Flask, request, redirect, render_template, send_from_directory
+from flask import Flask, request, redirect, render_template, url_for, send_from_directory
 
-UPLOAD_FOLDER = './files/'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+UPLOAD_FOLDER = '/files'
+PHISICAL_ROOT = os.path.dirname( os.path.abspath( __file__ ) )
+ALLOWED_EXTENSIONS = set(['PNG', 'png', 'JPG', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
+app.config['UPLOAD_FOLDER'] = PHISICAL_ROOT + UPLOAD_FOLDER
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -20,7 +20,7 @@ def upload_file():
         app.logger.info("Uploaded filename is "+file.filename)
         if file and allowed_file(file.filename):
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
-            return redirect('/')
+            return redirect(url_for('upload_file'))
 
     if request.method == 'GET':
         file_list = os.listdir( app.config['UPLOAD_FOLDER'] )
@@ -29,7 +29,7 @@ def upload_file():
             if one_file == '.gitkeep':
                 continue
             dic_file = {}
-            link = '/files/'+one_file
+            link = 'fileupload/files/' + one_file
             dic_file['url'] = link
             dic_file['file_name'] = one_file
             print dic_file
