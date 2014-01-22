@@ -13,6 +13,11 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
+@app.route('/files/<path:filename>')
+def download_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'],
+                               filename, as_attachment=True)
+
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
@@ -29,18 +34,13 @@ def upload_file():
             if one_file == '.gitkeep':
                 continue
             dic_file = {}
-            link = 'fileupload/files/' + one_file
+            link = url_for("download_file", filename=one_file, _external=True)
             dic_file['url'] = link
             dic_file['file_name'] = one_file
             print dic_file
             files.append( dic_file )
 
     return render_template('index.html',files=files)
-
-@app.route('/files/<path:filename>')
-def download_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'],
-                               filename, as_attachment=True)
 
 if __name__ == '__main__':
     app.run(debug=True)
